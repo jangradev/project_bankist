@@ -284,7 +284,7 @@ h4 {
 
 .operations__tab {
   margin-right: 2.5rem;
-  transform: translateY(-50%);
+  transform: translateY(-120%);
 }
 
 .operations__tab span {
@@ -311,7 +311,7 @@ h4 {
 }
 
 .operations__tab--active {
-  transform: translateY(-66%);
+  transform: translateY(-40%);
 }
 
 .operations__content {

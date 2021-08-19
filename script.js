@@ -396,7 +396,7 @@ console.log(h1.parentElement.children);
 /* we can apply on any propertey of siblings of h1 not h1  */
 console.log(h1.parentElement.children);
 [...h1.parentElement.children].forEach(function (el) {
-  if (el !== h1) el.style.transform = 'scale(0.5)';
+  if (el !== h1) el.style.transform = 'scale(1)';
 });
 
 //♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦
@@ -435,3 +435,86 @@ tabContainer.addEventListener('click', function (e) {
     .querySelector(`.operations__content--${clicked.dataset.tab}`)
     .classList.add('operations__content--active');
 });
+
+//♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦
+/* 192. Passing Arguments to Event Handlers */
+
+/* this function we used to make our code dry */
+/* const handleover = function (e, opacity) {
+   later we use this concept ...skip at this moment */
+/* it is not possible to pass another argument into a event handler function ehich is the 
+  event argument to pass another argument to use bind method*/
+const nav = document.querySelector('.nav');
+
+const handleover = function (e) {
+  if (e.target.classList.contains('nav__link')) {
+    /* above line of code to get nav__link node */
+    const link = e.target;
+    /* this is to get get particuler node where we click */
+
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+    /* this is code for sblings  */
+    siblings.forEach(el => {
+      //if (el !== link) el.style.opacity = opacity;
+      if (el !== link) el.style.opacity = this;
+    });
+
+    const logo = link.closest('.nav').querySelector('img');
+    //logo.style.opacity = opacity;
+    logo.style.opacity = this;
+  }
+};
+
+// nav.addEventListener('mouseover', function (e) {
+// above code we changed to below code by using callback function
+
+/* nav.addEventListener('mouseover', function (e) {handleover(e, 0.5));  */
+
+// we again changed our above code to below code
+/* we can use bind method to pass arguments in the main function 
+   we have use this keyword in main function */
+
+nav.addEventListener('mouseover', handleover.bind(0.5));
+
+// if (e.target.classList.contains('nav__link')) {
+//   const link = e.target;
+//   const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+//   const logo = link.closest('.nav').querySelector('img');
+
+//   siblings.forEach(el => {
+//     if (el !== link) el.style.opacity = 0.5;
+//   });
+//   logo.style.opacity = 0.5;
+// }
+
+/* nav.addEventListener('mouseover', function (e) {handleover(e, 0.5));  */
+
+/* we can use bind method to pass arguments in the main function */
+
+nav.addEventListener('mouseover', handleover.bind(0.5));
+
+/* nav.addEventListener('mouseout', handleover)
+for passing function in event handler we have to use function 
+without pranthesis(),we we need pass our event and opacity in this function.
+so we call back function that further passes that event and opacity 
+we cant do that thing as we have to pass arguments but   */
+
+// nav.addEventListener('mouseout', function (e) {
+
+/* nav.addEventListener('mouseout', function (e) {  handleover(e, 1)); */
+
+/* we can use bind method to pass arguments in the main function */
+
+nav.addEventListener('mouseout', handleover.bind(1));
+// if (e.target.classList.contains('nav__link')) {
+
+//   const link = e.target;
+//   const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+//   const logo = link.closest('.nav').querySelector('img');
+//   siblings.forEach(el => {
+//     if (el !== link) el.style.opacity = 1;
+//   });
+//   logo.style.opacity = 1;
+// }
+
+/*  we can dry our code by using function  */

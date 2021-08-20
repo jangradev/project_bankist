@@ -66,16 +66,16 @@ message.innerHTML =
 // allHeader.prepend(message);
 // allHeader.append(message);
 
-allHeader.before(message);
+//allHeader.before(message);
 // allHeader.after(message);
 //➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
 /* delete element */
-document
-  .querySelector('.btn--close--cookie')
-  .addEventListener('click', function () {
-    //message.parentElement.removeChild(message);
-    message.remove();
-  });
+// document
+//   .querySelector('.btn--close--cookie')
+//   .addEventListener('click', function () {
+//     //message.parentElement.removeChild(message);
+//     message.remove();
+//   });
 
 //♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦
 /* 184. Styles, Attributes and Classes */
@@ -445,7 +445,6 @@ tabContainer.addEventListener('click', function (e) {
 /* it is not possible to pass another argument into a event handler function ehich is the 
   event argument to pass another argument to use bind method*/
 const nav = document.querySelector('.nav');
-
 const handleover = function (e) {
   if (e.target.classList.contains('nav__link')) {
     /* above line of code to get nav__link node */
@@ -518,3 +517,225 @@ nav.addEventListener('mouseout', handleover.bind(1));
 // }
 
 /*  we can dry our code by using function  */
+
+//♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦
+/* 193. Implementing a Sticky Navigation: The Scroll Event */
+/* scroll event avaialable on window */
+/* first we select initial co oridinates of section1 to where we start 
+navigation stick to the top */
+
+// const initialCord = section1.getBoundingClientRect();
+// console.log(initialCord);
+
+/*DOMRect {x: 0, y: 466.0937805175781, width: 1498.888916015625, 
+     height: 1508.1251220703125, top: 466.0937805175781, …} */
+
+//   window.addEventListener('scroll', function (e) {
+//   console.log(window.scrollY);
+//   if (window.scrollY > initialCord.top) nav.classList.add('sticky');
+//   else nav.classList.remove('sticky');
+//   });
+
+/* So, using the scroll event for performing a certain action
+at a certain position of the page is really not the way to go.
+And again, that's because the scroll event here fires all the time, 
+no matter how small the change is here in the scroll.And so that makes 
+for a pretty bad performance and especially on mobile.Like on the
+ modern computer, of course,you're not gonna notice anything,
+ but if you're using this page maybe on an older smartphone,
+then it's not gonna be so nice. */
+
+//♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦
+/* 194. A Better Way: The Intersection Observer API */
+
+/* 
+
+//3️⃣💨
+const obsCallbackFn = function (entries, observer) {
+  entries.forEach(entry => {
+    console.log(entry);
+  });
+};
+
+//2️⃣💨
+const obsObject = {
+  root: null,
+  //threshold: 0.1,
+  threshold: [0.1,0.2]
+};
+
+//1️⃣💨
+const observer = new IntersectionObserver(obsCallbackFn, obsObject);
+observer.observe(section1); 
+
+*/
+//➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+const header = document.querySelector('.header');
+const stickyNavFn = function (entries, observe) {
+  const [entry] = entries;
+  //console.log(entry);
+
+  /* true at zero position  
+  IntersectionObserverEntry {time: 86387.79999995232,
+     rootBounds: DOMRectReadOnly, boundingClientRect: DOMRectReadOnly, 
+    intersectionRect: DOMRectReadOnly, isIntersecting: true, …} */
+
+  /* false at when header pass through viewpoint screen completly 
+    IntersectionObserverEntry {time: 85971.70000004768, 
+    rootBounds: DOMRectReadOnly, boundingClientRect: DOMRectReadOnly, 
+    intersectionRect: DOMRectReadOnly, isIntersecting: false, …} */
+  /* to use this flase position to stick our navition bar  */
+
+  if (!entry.isIntersecting) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+};
+
+const getNavHeight = nav.getBoundingClientRect().height;
+//console.log(getNavHeight); // 90
+
+const headerObserver = new IntersectionObserver(stickyNavFn, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${getNavHeight}px`,
+});
+headerObserver.observe(header);
+
+//♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦
+/* 195. Revealing Elements on Scroll */
+const allSection1 = document.querySelectorAll('.section');
+console.log(allSection1);
+
+const revealSection = function (entries, observer) {
+  const [entry] = entries;
+  /* we destructure entries array to get first element  */
+  //console.log(entry);
+
+  if (!entry.isIntersecting) return;
+  entry.target.classList.remove('section--hidden');
+
+  /* so section and section hidden,
+and so this means that actually a certain section did now
+intersect the viewport.Maybe we can see the ID.
+Oh, yeah, here it is.So it was the section one indeed.
+So the one with the ID of one.And this target will now actually be important,
+because now we want to make exactly this section visible,
+not all of the sections, right.
+But we are observing all of the sections
+here with this same observer here, right.And so now we need a way of knowing,
+which is the section that actually intersected the viewport.
+And so that's what we can use the target for. */
+
+  /* boundingClientRect: DOMRectReadOnly 
+      {x: 0, y: 760.984375, width: 1006.5, height: 1533.015625, top: 760.984375, …}
+   intersectionRatio: 0.1562347114086151
+   intersectionRect: DOMRectReadOnly
+        {x: 0, y: 760.984375, width: 1006.5, height: 239.515625, top: 760.984375, …}
+   isIntersecting: true
+   isVisible: false
+   rootBounds: DOMRectReadOnly {x: 0, y: 0, width: 1006.5, height: 1000.5, top: 0, …}
+   target: section#section--1.section
+ */
+
+  observer.unobserve(entry.target);
+
+  /* as we keep scrolling,the observer keeps observing the sections.
+So you see, as we keep scrolling here,more and more of these events,
+keep getting added.But in fact, they are actually no longer necessary,
+because we already did all the work that we wanted.
+And so we can now unobserve. */
+};
+
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.15,
+});
+
+allSection1.forEach(function (section) {
+  sectionObserver.observe(section);
+  section.classList.add('section--hidden');
+  /* in classlist we dont need to put ('.section--hidden')
+  as we already selected list of class  */
+});
+
+//♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦
+/* 196. Lazy Loading Images */
+
+/* So we select all the images which have the property of data-src.
+   And that's it. */
+const imgTargets = document.querySelectorAll('img[data-src');
+const loadImg = function (entries, observer) {
+  const [entry] = entries;
+  console.log(entry);
+  if (!entry.isIntersecting) return;
+  /* load images */
+  entry.target.src = entry.target.dataset.src;
+  /* we use eventlistner to remove blury image */
+  entry.target.addEventListener('load', function () {
+    entry.target.classList.remove('lazy-img');
+    observer.unobserve(entry.target);
+  });
+};
+const imgObserver = new IntersectionObserver(loadImg, {
+  root: null,
+  threshold: 0,
+  rootMargin: '200px',
+  /* this is we used to load images before we scroll down */
+});
+imgTargets.forEach(function (img) {
+  imgObserver.observe(img);
+});
+
+//♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦♦
+/* 197. Building a Slider Component: Part 1 */
+
+const slides = document.querySelectorAll('.slide');
+/* put all the slide side by side */
+const btnLeft = document.querySelector('.slider__btn--left');
+const btnRight = document.querySelector('.slider__btn--right');
+const dotContainer = document.querySelector('.dots');
+
+let curSlide = 0;
+let maxSlide = slides.length;
+console.log(maxSlide);
+
+// const createDots = function () {
+//   slides.forEach(function (_, i) {
+//     dotContainer.insertAdjacentElement(
+//       'beforeend',
+//       `<button class="dots__dot" data-slide="${i}"></button>`
+//     );
+//   });
+// };
+// createDots();
+
+const gotoSlide = function (slide) {
+  slides.forEach(
+    (s, i) => (s.style.transform = `translateX(${100 * (i - slide)}%)`)
+  );
+};
+gotoSlide(0);
+
+const nextslide = function () {
+  if (curSlide === maxSlide - 1) {
+    curSlide = 0;
+  } else {
+    curSlide++;
+  }
+  gotoSlide(curSlide);
+};
+const preSlide = function () {
+  if (curSlide === 0) {
+    curSlide = maxSlide - 1;
+  } else {
+    curSlide--;
+  }
+  gotoSlide(curSlide);
+};
+btnRight.addEventListener('click', nextslide);
+btnLeft.addEventListener('click', preSlide);
+
+document.addEventListener('keydown', function (e) {
+  console.log(e);
+  if (e.key === 'ArrowLeft') preSlide();
+  e.key === 'ArrowRight' && nextslide();
+});

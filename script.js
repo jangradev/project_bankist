@@ -288,17 +288,18 @@ console.log(document.querySelectorAll('.nav__link'));
   a.nav__link, 
   a.nav__link.nav__link--btn.btn--show-modal]
  */
-document.querySelectorAll('.nav__link').forEach(function (el) {
-  el.addEventListener('click', function (e) {
-    e.preventDefault();
-    const id = this.getAttribute('href');
-    console.log(id);
-    /* #section--1
-       #section--2
-       #section--3 */
-    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
-  });
-});
+// document.querySelectorAll('.nav__link').forEach(function (el) {
+//   el.addEventListener('click', function (e) {
+//     e.preventDefault();
+
+//     const id = this.getAttribute('href');
+//     console.log(id);
+//     /* #section--1
+//        #section--2
+//        #section--3 */
+//     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+//   });
+// });
 /* Now, as you see, this actually works just fine,but the problem is that it's not really efficient.
 So we are adding here the exact same callback function,so this event handler here,
 we are adding it once to each of these three elements.So the exact same function is now attached
@@ -324,7 +325,10 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
     console.log(e.target);
     const id = e.target.getAttribute('href');
     console.log(id);
-    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+    const nav_ink = document.querySelector(id);
+    if (nav_ink) {
+      nav_ink.scrollIntoView({ behavior: 'smooth' });
+    }
   }
   // i received error for not to put code in block scope
   // received null in id
@@ -693,20 +697,39 @@ const slides = document.querySelectorAll('.slide');
 const btnLeft = document.querySelector('.slider__btn--left');
 const btnRight = document.querySelector('.slider__btn--right');
 const dotContainer = document.querySelector('.dots');
+console.log(dotContainer);
 
 let curSlide = 0;
 let maxSlide = slides.length;
 console.log(maxSlide);
+//➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+//🍀🍀🍀🍀🍀🍀🍀🍀🍀🍀
 
-// const createDots = function () {
-//   slides.forEach(function (_, i) {
-//     dotContainer.insertAdjacentElement(
-//       'beforeend',
-//       `<button class="dots__dot" data-slide="${i}"></button>`
-//     );
-//   });
-// };
-// createDots();
+const createDots = function () {
+  slides.forEach(function (_, i) {
+    dotContainer.insertAdjacentHTML(
+      'beforeend',
+      `<button class="dots__dot" data-slide="${i}"></button>`
+    );
+  });
+};
+createDots();
+//➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+//🍀🍀🍀🍀🍀🍀🍀🍀🍀🍀
+
+const activateDot = function (slide) {
+  document
+    .querySelectorAll('.dots__dot')
+    .forEach(dot => dot.classList.remove('dots__dot--active'));
+  console.log('Hello');
+  document
+    .querySelector(`.dots__dot[data-slide="${slide}"]`)
+    .classList.add('dots__dot--active');
+  /*  spelling mistake waste 30 min ..u type classlict instead of classList */
+};
+activateDot(0);
+//➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+//🍀🍀🍀🍀🍀🍀🍀🍀🍀🍀
 
 const gotoSlide = function (slide) {
   slides.forEach(
@@ -714,6 +737,8 @@ const gotoSlide = function (slide) {
   );
 };
 gotoSlide(0);
+//➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+//🍀🍀🍀🍀🍀🍀🍀🍀🍀🍀
 
 const nextslide = function () {
   if (curSlide === maxSlide - 1) {
@@ -722,7 +747,11 @@ const nextslide = function () {
     curSlide++;
   }
   gotoSlide(curSlide);
+  activateDot(curSlide);
 };
+//➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+//🍀🍀🍀🍀🍀🍀🍀🍀🍀🍀
+
 const preSlide = function () {
   if (curSlide === 0) {
     curSlide = maxSlide - 1;
@@ -730,12 +759,45 @@ const preSlide = function () {
     curSlide--;
   }
   gotoSlide(curSlide);
+  activateDot(curSlide);
 };
+
+//➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
 btnRight.addEventListener('click', nextslide);
 btnLeft.addEventListener('click', preSlide);
-
+//➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
 document.addEventListener('keydown', function (e) {
   console.log(e);
   if (e.key === 'ArrowLeft') preSlide();
   e.key === 'ArrowRight' && nextslide();
+});
+//➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+dotContainer.addEventListener('click', function (e) {
+  if (e.target.classList.contains('dots__dot')) {
+    // const slide = e.target.dataset.slide;
+    // console.log(slide);
+    /* DOMStringMap {slide: "0"}
+        slide: "0"   
+        above code return object having slide propwertey with value 
+        we can destructure our object*/
+    //const { slide } = e.target.dataset;
+    const { slide } = e.target.dataset;
+    gotoSlide(slide);
+    activateDot(slide);
+  }
+});
+//➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖ */
+/* Dom tree life cycle... 
+Dom content loaded ...*/
+document.addEventListener('DOMContentLoaded', function (e) {
+  console.log('HTMLtree built!', e);
+});
+
+window.addEventListener('load', function (e) {
+  console.log('Page fully loaded', e);
+});
+window.addEventListener('beforeunload', function (e) {
+  e.preventDefault();
+  console.log(e);
+  e.return = ' ';
 });
